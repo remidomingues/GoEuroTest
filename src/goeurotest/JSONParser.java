@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 /**
  *
- * @author Deeper
+ * @author Rémi Domingues
  */
 public class JSONParser
 {
@@ -42,6 +42,8 @@ public class JSONParser
         List<Position> positions = null;
         JSONObject tmpPosition, tmpGeoPos;
         
+        Logger.getLogger(GoEuroTest.class.getName()).log(Level.INFO, String.format("Parsing JSON stream..."));
+        
         JSONObject parser = new JSONObject(jsonContent);
         JSONArray results = parser.getJSONArray(JSON_RESULTS);
         
@@ -49,17 +51,17 @@ public class JSONParser
         
         for(int i = 0; i < results.length(); ++i)
         {
-            //TODO add error management
-            tmpPosition = results.getJSONObject(i);
-            _type = tmpPosition.getString(JSON_OBJECT_TYPE);
-            _id = tmpPosition.getInt(JSON_OBJECT_ID);
-            name = tmpPosition.getString(JSON_DATA_NAME);
-            type = tmpPosition.getString(JSON_DATA_TYPE);
-            
-            tmpGeoPos = tmpPosition.getJSONObject(JSON_DATA_GEO_POS);
-            
             try
             {
+                tmpPosition = results.getJSONObject(i);
+                _type = tmpPosition.getString(JSON_OBJECT_TYPE);
+
+                _id = tmpPosition.getInt(JSON_OBJECT_ID);
+                name = tmpPosition.getString(JSON_DATA_NAME);
+                type = tmpPosition.getString(JSON_DATA_TYPE);
+
+                tmpGeoPos = tmpPosition.getJSONObject(JSON_DATA_GEO_POS);
+
                 lat = tmpGeoPos.getDouble(JSON_GEO_POS_LAT);
                 lon = tmpGeoPos.getDouble(JSON_GEO_POS_LON);
                 
@@ -67,7 +69,7 @@ public class JSONParser
             }
             catch(JSONException ex)
             {
-                Logger.getLogger(JSONParser.class.getName()).log(Level.WARNING, String.format("JSON object <%s>:<%s> ignored : Invalid geo position values received (not a double)", _id, name));
+                Logger.getLogger(GoEuroTest.class.getName()).log(Level.WARNING, String.format("JSON parsing error: JSON object ignored"));
             }
         }
         

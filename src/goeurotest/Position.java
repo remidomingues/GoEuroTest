@@ -6,7 +6,7 @@ package goeurotest;
 
 /**
  *
- * @author Deeper
+ * @author Rémi Domingues
  */
 public class Position
 {
@@ -55,7 +55,6 @@ public class Position
     
         sb.append(CSVSerializer.CSV_CARRIAGE_RETURN);
         
-        System.out.println(sb.toString());
         return sb.toString();
     }
 }

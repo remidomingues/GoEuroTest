@@ -13,6 +13,7 @@ import java.security.cert.CertificateException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLHandshakeException;
+import org.json.JSONException;
 
 /**
  *
@@ -66,6 +67,15 @@ public class GoEuroTest
         }
         
         System.out.println(result);
+        
+        try
+        {
+            JSONParser.parse(result);
+        }
+        catch (JSONException ex)
+        {
+            Logger.getLogger(GoEuroTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
  

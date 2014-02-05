@@ -50,5 +50,5 @@ public class HTTPSManager
         }
         
         return sb.toString();
-    } 
+    }
 }

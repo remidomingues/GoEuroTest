@@ -31,4 +31,31 @@ public class Position
         this.latitude = latitude;
         this.longitude = longitude;
     }
+    
+    public String toCSV()
+    {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(String.format(CSVSerializer.CSV_STRING_FIELD_TEMPLATE, _type));
+        sb.append(CSVSerializer.CSV_SEPARATOR);
+        
+        sb.append(String.format(CSVSerializer.CSV_INT_FIELD_TEMPLATE, _id));
+        sb.append(CSVSerializer.CSV_SEPARATOR);
+        
+        sb.append(String.format(CSVSerializer.CSV_STRING_FIELD_TEMPLATE, name));
+        sb.append(CSVSerializer.CSV_SEPARATOR);
+        
+        sb.append(String.format(CSVSerializer.CSV_STRING_FIELD_TEMPLATE, type));
+        sb.append(CSVSerializer.CSV_SEPARATOR);
+        
+        sb.append(CSVSerializer.CSV_COORD_FIELD_TEMPLATE.format(latitude));
+        sb.append(CSVSerializer.CSV_SEPARATOR);
+        
+        sb.append(CSVSerializer.CSV_COORD_FIELD_TEMPLATE.format(latitude));
+    
+        sb.append(CSVSerializer.CSV_CARRIAGE_RETURN);
+        
+        System.out.println(sb.toString());
+        return sb.toString();
+    }
 }

@@ -4,3 +4,8 @@
 *.jar
 *.war
 *.ear
+/dist/
+*.classpath
+*.project
+*.settings*
+*.csv

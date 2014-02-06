@@ -11,9 +11,9 @@ locations retrieved in a CSV file.
 Command line description
 ------------------------
 Standalone application used as follows:
-java -jar GoEuroTest.jar [-v] <position>
+java -jar GoEuroTest.jar [-v] position
 
-<position>:
+position:
 	This field must be the name of a position located in Europe, like a city.
 	The city name can be incomplete and can include spaces.
 	If this field contains spaces, it must be surrounded by quotation marks.

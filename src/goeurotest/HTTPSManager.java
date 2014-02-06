@@ -12,7 +12,6 @@ import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
@@ -20,10 +19,13 @@ import javax.net.ssl.SSLHandshakeException;
 
 /**
  * Service class in charge of retrieving information from an HTTPS URL
- * @author Rémi Domingues
+ * SSL certificate validation can be disable if the certificate is self-signed
+ * or has expired
+ * @author Remi Domingues
  */
 public class HTTPSManager
 {
+    /** HTTPS URL to retrieve information from */
     private static final String GOEURO_URL_TEMPLATE = "https://api.goeuro.com/api/v1/suggest/position/en/name/%s";
     
     private static final String TRUST_STORE_PATH = System.setProperty("javax.net.ssl.trustStore", "cacerts.jks");
@@ -32,7 +34,22 @@ public class HTTPSManager
     
     private static final String SECURE_SOCKET_PROTOCOL = "TLS";
     
-    public static String processHTTPSRequest(final String location, boolean checkCertificates) throws MalformedURLException, SSLHandshakeException, IOException
+    /**
+     * Processes an HTTPS request and returns the data retrieved
+     * This request aims at retrieving geolocalized information from a
+     * location
+     * @param location The location searched
+     * @param checkCertificates true if a valid certificate is required,
+     *                          false if self-signed or expired certificates
+     *                          are allowed
+     * @return Every location with its geographic coordinates which mathes
+     *         the location given in parameter
+     * @throws MalformedURLException If the URL is malformed
+     * @throws SSLHandshakeException If the certificate is self-signed or expired
+     * @throws IOException If an error occurs when retrieving data
+     */
+    public static String processHTTPSRequest(final String location, boolean checkCertificates)
+            throws MalformedURLException, SSLHandshakeException, IOException
     {        
         String line;
         StringBuilder sb = new StringBuilder();
@@ -49,7 +66,15 @@ public class HTTPSManager
             {
                 TrustModifier.relaxHostChecking(connection);
             }
-            catch(KeyManagementException | NoSuchAlgorithmException | KeyStoreException ex)
+            catch(KeyManagementException ex)
+            {
+                Logger.getLogger(GoEuroTest.class.getName()).log(Level.WARNING, "Unable to relax certificates validation. Usual validation process will be applied");
+            }
+            catch(NoSuchAlgorithmException ex)
+            {
+                Logger.getLogger(GoEuroTest.class.getName()).log(Level.WARNING, "Unable to relax certificates validation. Usual validation process will be applied");
+            }
+            catch(KeyStoreException ex)
             {
                 Logger.getLogger(GoEuroTest.class.getName()).log(Level.WARNING, "Unable to relax certificates validation. Usual validation process will be applied");
             }

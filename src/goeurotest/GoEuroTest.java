@@ -5,11 +5,6 @@
 package goeurotest;
 
 import java.io.*;
-import java.net.MalformedURLException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -20,15 +15,21 @@ import org.json.JSONException;
 /**
  * Main class of the application, querying the GoEuro API in order to retrieve
  * a JSON stream containing geolocalized information about the location
- * specified in the program's arguments. These information are then exporter to
+ * specified in the program's arguments. These information are then exported to
  * a CSV file.
- * Call: java -jar GoEuroTest.jar \"location description\"
- * The location description must be surrounded by quotation marks.
- * Spaces are accepted
- * @author Rémi Domingues
+ * Call: java -jar GoEuroTest.jar [-v] "location description"
+ * Quote marks are required if the location name contains spaces
+ * @author Remi Domingues
  */
 public class GoEuroTest
 {
+	/** Optional program option, enable the validation of every SSL certificate */
+	private static final String VALIDATE_CERT_OPTION = "-v";
+	
+	/**
+	 * Displays an error message using a logger, then exits
+	 * @param msg The error message to log
+	 */
     public static void exitOnError(String msg)
     {
         Logger.getLogger(GoEuroTest.class.getName()).log(Level.SEVERE, msg);
@@ -40,15 +41,16 @@ public class GoEuroTest
      * Parse the JSON stream retrieved
      * Export the position obtained to a CSV file
      * @param location The location to geolocalize
+     * @param validate true if SSL certificates have to be validated, false else
      */
-    private static void runTest(String location)
+    private static void runTest(String location, boolean validate)
     {
         String result = null;
         List<Position> positions = null;
         
         try
         {
-            result = HTTPSManager.processHTTPSRequest(location, false);
+            result = HTTPSManager.processHTTPSRequest(location, validate);
         }
         catch(SSLHandshakeException ex)
         {
@@ -56,6 +58,7 @@ public class GoEuroTest
         }
         catch (IOException ex)
         {
+            ex.printStackTrace();
             exitOnError("Unable to connect or retrieve data from requested target");
         }
         
@@ -80,30 +83,38 @@ public class GoEuroTest
     }
 
     /**
-     * @see class description
+     * See class description
      * @param args The program must take in argument a string describing a
      * location
+     * Quote marks are necessary if the location name contains spaces
      * Spaces will be replaced by specialized characters
      */
     public static void main(String[] args)
     {
+    	boolean validate = false;
         String location = null;
-        String correctCall = "Correct syntax: java -jar GoEuroTest.jar \"location description\"";
+        String correctCall = "Correct syntax: java -jar GoEuroTest.jar [-v] \"location description\"";
         Locale.setDefault(Locale.US);
         
-        if(args.length != 1)
+        if(args.length < 1 || args.length > 2)
         {
             exitOnError(String.format("Invalid arguments number: %s", correctCall));
         }
         
-        location = args[0];
-        
-        if(location.length() <= 1 || location.charAt(0) != '"' || location.charAt(location.length() -1) != '"')
+        if(args.length == 2)
         {
-            exitOnError(String.format("Invalid argument format: %s", correctCall));
+        	if(!args[0].equals(VALIDATE_CERT_OPTION))
+        	{
+        		exitOnError(String.format("Invalid argument received: %s (%s expected)", args[0], VALIDATE_CERT_OPTION));
+        	}
+        	
+        	validate = true;
+        	location = args[1];
         }
-        
-        location = location.substring(1, location.length() - 1);
+        else
+        {
+        	location = args[0];
+        }
         
         if(location.length() == 0)
         {
@@ -112,6 +123,6 @@ public class GoEuroTest
         
         location = location.replace(" ", "%20");
 
-        GoEuroTest.runTest(location);
+        GoEuroTest.runTest(location, validate);
     }
 }

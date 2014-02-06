@@ -58,7 +58,6 @@ public class GoEuroTest
         }
         catch (IOException ex)
         {
-            ex.printStackTrace();
             exitOnError("Unable to connect or retrieve data from requested target");
         }
         

@@ -5,10 +5,13 @@
 package goeurotest;
 
 import java.io.*;
+import java.security.InvalidAlgorithmParameterException;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
 import org.json.JSONException;
 
@@ -54,11 +57,15 @@ public class GoEuroTest
         }
         catch(SSLHandshakeException ex)
         {
-            exitOnError("Unable to find valid certificate to requested target");
+            exitOnError("Unable to find valid certificate to requested target. This could be caused by a self-signed or expired certificate.");
+        }
+        catch(SSLException ex)
+        {
+        	exitOnError("Unable to validate the certificate of the requested target");
         }
         catch (IOException ex)
         {
-            exitOnError("Unable to connect or retrieve data from requested target");
+            exitOnError("Unable to connect or retrieve data from requested target. Please check your Internet connection");
         }
         
         try

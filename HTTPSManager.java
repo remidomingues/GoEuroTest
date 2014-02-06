@@ -9,12 +9,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
 
 /**
@@ -46,10 +48,11 @@ public class HTTPSManager
      *         the location given in parameter
      * @throws MalformedURLException If the URL is malformed
      * @throws SSLHandshakeException If the certificate is self-signed or expired
+     * @throws SSLException  If the certificate cannot be validated
      * @throws IOException If an error occurs when retrieving data
      */
     public static String processHTTPSRequest(final String location, boolean checkCertificates)
-            throws MalformedURLException, SSLHandshakeException, IOException
+            throws MalformedURLException, SSLHandshakeException, SSLException, IOException
     {        
         String line;
         StringBuilder sb = new StringBuilder();

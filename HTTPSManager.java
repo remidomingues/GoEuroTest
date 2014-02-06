@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -29,12 +28,6 @@ public class HTTPSManager
 {
     /** HTTPS URL to retrieve information from */
     private static final String GOEURO_URL_TEMPLATE = "https://api.goeuro.com/api/v1/suggest/position/en/name/%s";
-    
-    private static final String TRUST_STORE_PATH = System.setProperty("javax.net.ssl.trustStore", "cacerts.jks");
-    
-    private static final String TRUST_STORE_PWD = "changeit";
-    
-    private static final String SECURE_SOCKET_PROTOCOL = "TLS";
     
     /**
      * Processes an HTTPS request and returns the data retrieved

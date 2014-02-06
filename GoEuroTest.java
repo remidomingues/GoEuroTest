@@ -5,7 +5,6 @@
 package goeurotest;
 
 import java.io.*;
-import java.security.InvalidAlgorithmParameterException;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;

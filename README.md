@@ -28,6 +28,7 @@ Default configuration does not validate the SSL certificate.
 Requirements
 ------------
 JavaSE-1.6 environment
-JSON in Java library :
+
+JSON in Java library:
 - See https://github.com/douglascrockford/JSON-java
-- .jar download link : http://www.java2s.com/Code/Jar/j/Downloadjavajsonjar.htm
+- .jar download link: http://www.java2s.com/Code/Jar/j/Downloadjavajsonjar.htm
